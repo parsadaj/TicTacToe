@@ -1,5 +1,19 @@
 import pygame
 
+
+def is_ended(status, row, col, turn):
+    if status[row][:].count(turn) == 3:
+        return True
+    if [status[0][col], status[1][col], status[2][col]].count(turn) == 3:
+        return True
+    if row == col and \
+       [status[0][0], status[1][1], status[2][2]].count(turn) == 3:
+        return True
+    if row == 2 - col and \
+       [status[2][0], status[1][1], status[0][2]].count(turn) == 3:
+        return True
+    return False
+
 pygame.init()
 
 screen_width = 600
@@ -37,8 +51,12 @@ while not game_aborted:
             col = int(pos[1]/200)
             if status[row][col] == 0:
                 status[row][col] = turn
+                game_ended = is_ended(status, row, col, turn)
+                if game_ended:
+                    print(turn, 'Wins!')
                 turn = 'X' if turn == 'O' else 'O'
                 played_turns += 1
+                
     screen.fill(colorWhite)
     for i in range(1,3):
         screen.blit(board_columns, (i*200, 0))
